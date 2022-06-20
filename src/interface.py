@@ -38,7 +38,7 @@ def buildMapa(display,data):
 
 #Construir uma dungeon
 def buildDungeon(display,data):
-    offset = 40
+    offset = 30
     for y in range(0,840,offset):
         for x in range(0,840,offset):
             

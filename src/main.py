@@ -1,15 +1,15 @@
 import pygame, sys
 
 from pygame.locals import *
-from src.interface import *
-from src.arquivos import *
+from interface import *
+from arquivos import *
 
 
 def main():
     mapa = getMapaHyrule()
 
     dungeons = getDungeons()
-    dungeonIndex = - 1
+    dungeonIndex = 0
     estadoDungeons = (False, False, False) #(dungeon1, dungeon2, dungeon3)
     estadoCasaLink = False
     estadoLostWoods = False
@@ -18,7 +18,6 @@ def main():
 
     DISPLAY = pygame.display.set_mode((840,840))
     pygame.display.set_caption('Legend of Zelda: An AI to the past')
-    buildMapa(DISPLAY,mapa,20)
 
     while True: #Game loop
         for event in pygame.event.get():
