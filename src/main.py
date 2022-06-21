@@ -9,7 +9,7 @@ def main():
     mapa = getMapaHyrule()
 
     dungeons = getDungeons()
-    dungeonIndex = 0
+    dungeonIndex = -1
     estadoDungeons = (False, False, False) #(dungeon1, dungeon2, dungeon3)
     estadoCasaLink = False
     estadoLostWoods = False
