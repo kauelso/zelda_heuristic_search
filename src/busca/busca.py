@@ -8,6 +8,7 @@ custoChao = (0,10,20,100,150,180)
 
 custoTotal = 0
 arrayCaminho = ()
+arrayCustos = ()
 
 def buscaCaminho(map,estadoInicial,estadoFinal):
     posicao = estadoInicial
@@ -16,11 +17,11 @@ def buscaCaminho(map,estadoInicial,estadoFinal):
         filhos = testeFilhos(posicao,map)
         posicaonova = testeMenorCusto(posicao,filhos,estadoFinal)
         custo = calculaDistancia(posicao,posicaonova)
-        print (custo)
+        arrayCustos.append(custo)
         custoTotal = custoTotal + custo
         posicao = posicaonova
     print (custoTotal)
-    return arrayCaminho
+    return arrayCaminho,arrayCustos
 
 def testeFilhos(posicao,map,arrayCaminho):
     possivel = ()
