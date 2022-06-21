@@ -2,7 +2,7 @@
 
 Este trabalho foi testado usando a versão 3.10.2 do python.
 
-## Installation
+## Instalação
 
 Instale o python 3.6+
 
@@ -24,16 +24,18 @@ pip3 install pygame
 pip3 install numpy
 ```
 
-## Usage
+## Como rodar
 
 Para inicializar o programa, entre na pasta src e execute o arquivo main.py
 
 Caso tenha apenas o python 3 instalado:
 ```bash
+cd src
 python main.py
 ```
 
 Caso tenha o python 2 e python 3 instalado:
 ```bash
+cd src
 python3 main.py
 ```
