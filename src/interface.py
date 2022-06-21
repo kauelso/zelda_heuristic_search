@@ -1,5 +1,9 @@
 import pygame
 from math import floor
+import os
+
+dir = os.path.dirname(__file__)
+assetsDir = os.path.join(dir, '../assets/')
 
 #Cores
 COR_GRAMA = pygame.Color(146,208,80)
@@ -11,17 +15,17 @@ COR_CHAO_DUNGEON = pygame.Color(225, 225, 225)
 COR_PAREDE_DUNGEON = pygame.Color(97, 97, 97)
 
 #Assets
-LINK = pygame.image.load('../assets/link.png')
-PORTA = pygame.image.load('../assets/door.png')
+LINK = pygame.image.load(assetsDir + 'link.png')
+PORTA = pygame.image.load(assetsDir + 'door.png')
 
 
-pingenteAzul = pygame.image.load('../assets/pingente_azul.webp')
+pingenteAzul = pygame.image.load(assetsDir + 'pingente_azul.webp')
 pingenteAzul = pygame.transform.scale(pingenteAzul, (30, 30))
 
-pingenteVermelho = pygame.image.load('../assets/pingente_vermelho.webp')
+pingenteVermelho = pygame.image.load(assetsDir + 'pingente_vermelho.webp')
 pingenteVermelho = pygame.transform.scale(pingenteVermelho, (30, 30))
 
-pingenteVerde = pygame.image.load('../assets/pingente_verde.webp')
+pingenteVerde = pygame.image.load( assetsDir + 'pingente_verde.webp')
 pingenteVerde = pygame.transform.scale(pingenteVerde, (30, 30))
 
 def posicaoRelativaMapa(posicao):

@@ -7,45 +7,67 @@ from arquivos import *
 
 POSICAO_INICIAL = (24,27)
 POSICAO_LOST_WOODS = (6,5)
-POSICAO_DUNGEON1 = (5,32)
-POSICAO_DUNGEON2 = (39,17)
-POSICAO_DUNGEON3 = (24,1)
-
+POSICOES_DUNGEONS = [(5,32),(39,17),(24,1)]
 POSICOES_INICIAL_DUNGEON = [(14,26),(13,25),(14,25)]
 POSICOES_PINGENTE_DUNGEON = [(13,3),(13,3),(15,18)]
 
-def moveLink(target, posicaoLink, velocidade):
+def moveLink(target, posicaoLink):
     x = posicaoLink[0]
     y = posicaoLink[1]
 
     if target[0] > x:
-        x = min(x + velocidade, target[0])
+        x = min(x + 1, target[0])
     elif target[0] < x:
-        x = max(x - velocidade, target[0])
+        x = max(x - 1, target[0])
 
     if target[1] > y:
-        y = min(y + velocidade, target[1])
+        y = min(y + 1, target[1])
     elif target[1] < y:
-        y = max(y - velocidade, target[1])
+        y = max(y - 1, target[1])
     return (x,y)
 
+def proxCaminhoDungeon(posicaoLink,target):
+    dg1 = target[0]
+    dg2 = target[1]
+    dg3 = target[2]
+    
+
+    pass
+
+def caminhoPingente(posicaoLink,target):
+    #return caminho
+    pass
+
+def caminhoSaida(posicaoLink,target):
+    #return caminho
+    pass
+
+def caminhoCasaLink(posicaoLink,target):
+    #return caminho
+    pass
+
+def caminhoLostWoods(posicaoLink,target):
+    #return caminho
+    pass
 
 def main():
     fpsClock = pygame.time.Clock()
-    velocidade = 1
+    velocidade = 10
     total = 0
 
-    posicaoLink = (27,27)
+    posicaoLink = POSICAO_INICIAL
 
     mapa = getMapaHyrule()
 
     dungeons = getDungeons()
-    dungeonIndex = 0
+    dungeonIndex = -1
     estadoDungeons = (False, False, False) #(dungeon1, dungeon2, dungeon3)
     estadoCasaLink = False
     estadoLostWoods = False
 
-    caminho = []
+    jogoPausado = True
+
+    caminho = [(13,3)]
 
     pygame.init()
 
@@ -59,36 +81,50 @@ def main():
             if event.type == QUIT:
                 pygame.quit()
                 return 0
+            if event.type == KEYDOWN:
+                if event.key == K_SPACE : 
+                    jogoPausado = not jogoPausado
+                    print(jogoPausado)
         if(not estadoLostWoods):
-            if not caminho:
-                if False in estadoDungeons:
-                    #calculaProximoCaminhoDungeon
-                    pass
-                elif not estadoCasaLink:
-                    #calculaCaminhoCasaLink
-                    pass
-                elif not estadoLostWoods:
-                    #calculaCaminhoLostWoods
-                    pass
-                pass
-            else:
-                if caminho[0] == posicaoLink:
-                    caminho.remove(caminho[0])
+            if not jogoPausado:
+                if not caminho:
+                    if dungeonIndex != -1:
+                        if estadoDungeons[dungeonIndex] == False:
+                            caminho = caminhoPingente(posicaoLink,POSICOES_PINGENTE_DUNGEON[dungeonIndex])
+                        else:
+                            caminho = caminhoSaida(posicaoLink, POSICOES_INICIAL_DUNGEON[dungeonIndex])
+                    elif False in estadoDungeons:
+                        caminho = proxCaminhoDungeon(posicaoLink, POSICOES_DUNGEONS)
+                    elif not estadoCasaLink:
+                        caminho = caminhoCasaLink(posicaoLink, POSICAO_INICIAL)
+                    elif not estadoLostWoods:
+                        caminho = caminhoLostWoods(posicaoLink, POSICAO_LOST_WOODS)
                 else:
-                    moveLink(caminho[0],posicaoLink,velocidade)
-                pass
-            if(dungeonIndex > -1):
-                posicaoLink = POSICOES_INICIAL_DUNGEON[0]
-                buildDungeon(DISPLAY, dungeons[dungeonIndex])
-                mostraAssetsDungeon(DISPLAY,posicaoLink,(13,3),dungeonIndex)
-                #calculaProximoPasso
-            else:
-                buildMapa(DISPLAY,mapa)
-                mostraAssetsMapa(DISPLAY,posicaoLink,POSICAO_DUNGEON1,POSICAO_DUNGEON2,POSICAO_DUNGEON3,POSICAO_LOST_WOODS)
-                #calculaProximoPasso       
+                    if caminho[0] == posicaoLink:
+                        caminho.remove(caminho[0])
+                    else:
+                        posicaoLink = moveLink(caminho[0],posicaoLink)
+
+                if(dungeonIndex > -1):
+                    buildDungeon(DISPLAY, dungeons[dungeonIndex])
+                    mostraAssetsDungeon(DISPLAY,posicaoLink,POSICOES_PINGENTE_DUNGEON[dungeonIndex],dungeonIndex)
+                    
+                    if posicaoLink == POSICOES_PINGENTE_DUNGEON[dungeonIndex] and not estadoDungeons[dungeonIndex]:
+                        estadoDungeons[dungeonIndex] = True
+                    elif estadoDungeons[dungeonIndex] and posicaoLink == POSICOES_INICIAL_DUNGEON[dungeonIndex]:
+                        posicaoLink = POSICOES_DUNGEONS[dungeonIndex]
+                        dungeonIndex = -1
+                else:
+                    buildMapa(DISPLAY,mapa)
+                    mostraAssetsMapa(DISPLAY,posicaoLink,POSICOES_DUNGEONS[0],POSICOES_DUNGEONS[1],POSICOES_DUNGEONS[2],POSICAO_LOST_WOODS)
+
+                    if posicaoLink in POSICOES_DUNGEONS:
+                        dungeonIndex = POSICOES_DUNGEONS.index(posicaoLink)
+                        posicaoLink = POSICOES_INICIAL_DUNGEON[dungeonIndex]
+
         mostraPontuação(DISPLAY,total)
         pygame.display.update()
-        fpsClock.tick(15)
+        fpsClock.tick(velocidade)
 
 
 if __name__ == '__main__':
