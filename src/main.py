@@ -10,6 +10,9 @@ POSICAO_DUNGEON1 = (5,32)
 POSICAO_DUNGEON2 = (39,17)
 POSICAO_DUNGEON3 = (24,1)
 
+POSICOES_INICIAL_DUNGEON = [(14,26),(13,25),(14,25)]
+POSICOES_PINGENTE_DUNGEON = [(13,3),(13,3),(15,18)]
+
 def moveLink(target, posicaoLink, velocidade):
     x = posicaoLink[0]
     y = posicaoLink[1]
@@ -30,12 +33,12 @@ def main():
     velocidade = 0.1
     total = 0
 
-    posicaoLink = POSICAO_INICIAL
+    posicaoLink = (27,27)
 
     mapa = getMapaHyrule()
 
     dungeons = getDungeons()
-    dungeonIndex = -1
+    dungeonIndex = 0
     estadoDungeons = (False, False, False) #(dungeon1, dungeon2, dungeon3)
     estadoCasaLink = False
     estadoLostWoods = False
@@ -54,13 +57,12 @@ def main():
                 return 0
         if(not estadoLostWoods):
             if(dungeonIndex > -1):
+                posicaoLink = POSICOES_INICIAL_DUNGEON[0]
                 buildDungeon(DISPLAY, dungeons[dungeonIndex])
-                posicaoLink = moveLink((10,15),posicaoLink,velocidade)
-                #buildDungeonAssets
+                mostraAssetsDungeon(DISPLAY,posicaoLink,(13,3),dungeonIndex)
                 #calculaProximoPasso
             else:
                 buildMapa(DISPLAY,mapa)
-                posicaoLink = moveLink((10,15),posicaoLink,velocidade)
                 mostraAssetsMapa(DISPLAY,posicaoLink,POSICAO_DUNGEON1,POSICAO_DUNGEON2,POSICAO_DUNGEON3,POSICAO_LOST_WOODS)
                 #calculaProximoPasso       
         mostraPontuação(DISPLAY,total)
