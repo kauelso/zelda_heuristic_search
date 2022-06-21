@@ -1,3 +1,4 @@
+from numpy import empty
 import pygame, sys
 
 from pygame.locals import *
@@ -28,9 +29,10 @@ def moveLink(target, posicaoLink, velocidade):
         y = max(y - velocidade, target[1])
     return (x,y)
 
+
 def main():
     fpsClock = pygame.time.Clock()
-    velocidade = 0.1
+    velocidade = 1
     total = 0
 
     posicaoLink = (27,27)
@@ -42,6 +44,8 @@ def main():
     estadoDungeons = (False, False, False) #(dungeon1, dungeon2, dungeon3)
     estadoCasaLink = False
     estadoLostWoods = False
+
+    caminho = []
 
     pygame.init()
 
@@ -56,6 +60,23 @@ def main():
                 pygame.quit()
                 return 0
         if(not estadoLostWoods):
+            if not caminho:
+                if False in estadoDungeons:
+                    #calculaProximoCaminhoDungeon
+                    pass
+                elif not estadoCasaLink:
+                    #calculaCaminhoCasaLink
+                    pass
+                elif not estadoLostWoods:
+                    #calculaCaminhoLostWoods
+                    pass
+                pass
+            else:
+                if caminho[0] == posicaoLink:
+                    caminho.remove(caminho[0])
+                else:
+                    moveLink(caminho[0],posicaoLink,velocidade)
+                pass
             if(dungeonIndex > -1):
                 posicaoLink = POSICOES_INICIAL_DUNGEON[0]
                 buildDungeon(DISPLAY, dungeons[dungeonIndex])
@@ -67,7 +88,7 @@ def main():
                 #calculaProximoPasso       
         mostraPontuação(DISPLAY,total)
         pygame.display.update()
-        fpsClock.tick(30)
+        fpsClock.tick(15)
 
 
 if __name__ == '__main__':
