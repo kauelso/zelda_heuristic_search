@@ -1,6 +1,7 @@
-from numpy import empty
+import numpy as np
 import pygame, sys
 
+from busca.busca import buscaCaminho
 from pygame.locals import *
 from interface import *
 from arquivos import *
@@ -55,19 +56,19 @@ def main():
     velocidade = 5
     total = 0
 
-    posicaoLink = POSICAO_INICIAL
+    posicaoLink = POSICOES_INICIAL_DUNGEON[0]
 
     mapa = getMapaHyrule()
 
     dungeons = getDungeons()
-    dungeonIndex = -1
+    dungeonIndex = 0
     estadoDungeons = (False, False, False) #(dungeon1, dungeon2, dungeon3)
     estadoCasaLink = False
     estadoLostWoods = False
 
     jogoPausado = True
 
-    caminho = []
+    caminho = buscaCaminho(dungeons[0],posicaoLink,POSICOES_PINGENTE_DUNGEON[0])
 
     pygame.init()
 

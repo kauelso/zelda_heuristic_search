@@ -45,15 +45,15 @@ def buildMapa(display,data):
 
             if data[dataY][dataX] == 'G':
                 pygame.draw.rect(display,COR_GRAMA,(x, y, offset, offset))
-            elif data[dataY][dataX] == 'S':
+            elif data[dataY][dataX] == 'A':
                 pygame.draw.rect(display,COR_AREIA,(x, y, offset, offset))
             elif data[dataY][dataX] == 'F':
                 pygame.draw.rect(display,COR_FLORESTA,(x, y, offset, offset))
             elif data[dataY][dataX] == 'M':
                 pygame.draw.rect(display,COR_MONTANHA,(x, y, offset, offset))
-            elif data[dataY][dataX] == 'W':
+            elif data[dataY][dataX] == 'R':
                 pygame.draw.rect(display,COR_AGUA,(x, y, offset, offset))
-            elif data[dataY][dataX] == 'D':
+            elif data[dataY][dataX] == 'P':
                 pygame.draw.rect(display,COR_CHAO_DUNGEON,(x, y, offset, offset))
             else:
                 pygame.draw.rect(display,COR_PAREDE_DUNGEON,(x, y, offset, offset))
