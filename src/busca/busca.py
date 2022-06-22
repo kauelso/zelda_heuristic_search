@@ -5,26 +5,56 @@ from arquivos import getDungeons
 caminhoPossivel = ('P','G','A','F','M','R')
 custoChao = (0,10,20,100,150,180)
 
+listaFechada = []
+listaAberta = []
+
+listaValores = []
+listaValores_pais = []
+index = 0
 
 custoTotal = 0
-arrayCaminho = ()
-arrayCustos = ()
+arrayCaminho = []
+arrayCustos = []
+
 
 def buscaCaminho(map,estadoInicial,estadoFinal):
     posicao = estadoInicial
-    while posicao != estadoFinal:
-        arrayCaminho.append(posicao)
-        filhos = testeFilhos(posicao,map)
-        posicaonova = testeMenorCusto(posicao,filhos,estadoFinal)
-        custo = calculaDistancia(posicao,posicaonova)
-        arrayCustos.append(custo)
-        custoTotal = custoTotal + custo
+    
+    listaFechada.append(posicao)
+    listaValores.append(index)
+    listaValores_pais.append(index)
+    index+=1
+    filhos = testeFilhos(posicao,map)
+
+    for i in range(0,len(filhos)):
+        listaAberta.append(filhos[i])
+
+    while len(listaAberta) > 0:
+        posicaonova = testeMenorCusto(estadoInicial,listaAberta,estadoFinal)
+        listaAberta.pop(posicaonova)
+        listaFechada.append(posicaonova)
+        listaValores.append(index)
+        index+=1
+        for i in range(0,len(listaFechada)):
+            if(listaFechada[i] == posicao):
+                listaValores_pais.append = listaValores[i]
         posicao = posicaonova
-    print (custoTotal)
-    return arrayCaminho,arrayCustos
+        filhos = testeFilhos(posicao,map)
+        listaAberta.append(filhos)
+
+    caminhoReverso = len(listaFechada)
+    while caminhoReverso != estadoInicial:
+        arrayCaminho.append(caminhoReverso)
+        for i in range(0,len(listaValores)):
+            if(listaValores[i] == caminhoReverso):
+                pai = listaValores_pais[i]
+                caminhoReverso = listaFechada[pai]
+
+    return arrayCaminho
+
 
 def testeFilhos(posicao,map,arrayCaminho):
-    possivel = ()
+    possivel = []
     x = posicao[0]
     y = posicao[1]
     cima = map[x][y+1]
@@ -67,3 +97,6 @@ def calculaDistancia(posicaoAtual,posicaoDestino):
 def calculaHeuristica(posicaoAtual,estadoFinal):
     heuristica = math.sqrt( (estadoFinal[0]-posicaoAtual[0])**2 + (estadoFinal[1] - posicaoAtual[1])**2 )
     return heuristica
+
+
+print (buscaCaminho(getDungeons()[0],(14,25),(13,3)))
