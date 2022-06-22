@@ -8,7 +8,7 @@ from arquivos import *
 POSICAO_INICIAL = (24,27)
 POSICAO_LOST_WOODS = (6,5)
 POSICOES_DUNGEONS = [(5,32),(39,17),(24,1)]
-POSICOES_INICIAL_DUNGEON = [(14,26),(13,25),(14,25)]
+POSICOES_INICIAL_DUNGEON = [(14,25),(13,25),(14,25)]
 POSICOES_PINGENTE_DUNGEON = [(13,3),(13,3),(15,18)]
 
 def moveLink(target, posicaoLink):
@@ -30,29 +30,29 @@ def proxCaminhoDungeon(posicaoLink,target):
     dg1 = target[0]
     dg2 = target[1]
     dg3 = target[2]
-    
 
-    pass
+
+    return []
 
 def caminhoPingente(posicaoLink,target):
     #return caminho
-    pass
+    return []
 
 def caminhoSaida(posicaoLink,target):
     #return caminho
-    pass
+    return []
 
 def caminhoCasaLink(posicaoLink,target):
     #return caminho
-    pass
+    return []
 
 def caminhoLostWoods(posicaoLink,target):
     #return caminho
-    pass
+    return []
 
 def main():
     fpsClock = pygame.time.Clock()
-    velocidade = 10
+    velocidade = 5
     total = 0
 
     posicaoLink = POSICAO_INICIAL
@@ -67,7 +67,7 @@ def main():
 
     jogoPausado = True
 
-    caminho = [(13,3)]
+    caminho = []
 
     pygame.init()
 
@@ -84,7 +84,7 @@ def main():
             if event.type == KEYDOWN:
                 if event.key == K_SPACE : 
                     jogoPausado = not jogoPausado
-                    print(jogoPausado)
+
         if(not estadoLostWoods):
             if not jogoPausado:
                 if not caminho:
@@ -100,14 +100,14 @@ def main():
                     elif not estadoLostWoods:
                         caminho = caminhoLostWoods(posicaoLink, POSICAO_LOST_WOODS)
                 else:
+                    posicaoLink = moveLink(caminho[0],posicaoLink)
                     if caminho[0] == posicaoLink:
                         caminho.remove(caminho[0])
-                    else:
-                        posicaoLink = moveLink(caminho[0],posicaoLink)
 
                 if(dungeonIndex > -1):
                     buildDungeon(DISPLAY, dungeons[dungeonIndex])
-                    mostraAssetsDungeon(DISPLAY,posicaoLink,POSICOES_PINGENTE_DUNGEON[dungeonIndex],dungeonIndex)
+                    mostraAssetsDungeon(DISPLAY,posicaoLink,POSICOES_PINGENTE_DUNGEON[dungeonIndex],dungeonIndex,POSICOES_INICIAL_DUNGEON[dungeonIndex])
+                    print(posicaoLink)
                     
                     if posicaoLink == POSICOES_PINGENTE_DUNGEON[dungeonIndex] and not estadoDungeons[dungeonIndex]:
                         estadoDungeons[dungeonIndex] = True
@@ -123,6 +123,7 @@ def main():
                         posicaoLink = POSICOES_INICIAL_DUNGEON[dungeonIndex]
 
         mostraPontuação(DISPLAY,total)
+        if jogoPausado: mostraPause(DISPLAY)
         pygame.display.update()
         fpsClock.tick(velocidade)
 

@@ -85,6 +85,13 @@ def mostraPontuação(display,total):
     textRectObj.center = (420, 30)
     display.blit(textSurfaceObj, textRectObj)
 
+def mostraPause(display):
+    fontObj = pygame.font.Font('freesansbold.ttf', 24)
+    textSurfaceObj = fontObj.render('JOGO PAUSADO: PRESSIONE ESPAÇO', True, pygame.Color(0,255,0))
+    textRectObj = textSurfaceObj.get_rect()
+    textRectObj.center = (420, 420)
+    display.blit(textSurfaceObj, textRectObj)
+
 
 def mostraAssetsMapa(display,posicaoLink, posicaoDungeon1, posicaoDungeon2, posicaoDungeon3, posicaoLostWoods):
     link = pygame.transform.scale(LINK, (20, 20))
@@ -96,10 +103,11 @@ def mostraAssetsMapa(display,posicaoLink, posicaoDungeon1, posicaoDungeon2, posi
     display.blit(porta,posicaoRelativaMapa(posicaoDungeon3))
     display.blit(porta,posicaoRelativaMapa(posicaoLostWoods))
 
-def mostraAssetsDungeon(display,posicaoLink, posicaoPingente, dungeonIndex):
+def mostraAssetsDungeon(display,posicaoLink, posicaoPingente, dungeonIndex, posicaoPorta):
     link = pygame.transform.scale(LINK, (30, 30))
     porta = pygame.transform.scale(PORTA, (30, 30))
 
+    display.blit(porta,posicaoRelativaDungeon(posicaoPorta))
     display.blit(link,posicaoRelativaDungeon(posicaoLink))
     if(dungeonIndex == 0):
         display.blit(pingenteAzul,posicaoRelativaDungeon(posicaoPingente))
