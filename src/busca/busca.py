@@ -1,99 +1,92 @@
 import math
 
 #P = piso , G = Grama , A = Areia , F = Floresta  , M = Montanha , R = Rio
-caminhoPossivel = ('W','P','G','A','F','M','R')
-custoChao = (999999,10,10,20,100,150,180)
+caminhoPossivel = ('P','G','A','F','M','R')
+custoChao = (10,10,20,100,150,180)
+class No():
+    def __init__(self,pai=None,posicao=None):
+        self.pai = pai
+        self.f = 0
+        self.h = 0
+        self.g = 0
+        self.posicao = posicao
+
+    def __eq__(self, other):
+        return self.posicao == other.posicao
+    
+    def custo(self,mapa):
+        letra = mapa[self.posicao[1]][self.posicao[0]]
+        for i in range(0,len(caminhoPossivel)):
+            if (letra == caminhoPossivel[i]):
+                custo = custoChao[i]
+                return custo
+
+
 
 listaFechada = []
 listaAberta = []
 
-listaValores = []
-listaValores_pais = []
+def buscaCaminho(mapa,inicio,fim):
+    tamanhoMapa = len(mapa)
 
-custoTotal = 0
-arrayCaminho = []
-arrayCustos = []
+    noInicial = No(posicao=inicio)
+    noFinal = No(posicao=fim)
 
-
-def buscaCaminho(map,estadoInicial,estadoFinal):
-    index = 0
-    posicao = estadoInicial
-    
-    listaFechada.append(posicao)
-    listaValores.append(index)
-    listaValores_pais.append(index)
-    index+=1
-    filhos = testeFilhos(posicao,map,listaFechada)
-
-    for i in range(0,len(filhos)):
-        listaAberta.append(filhos[i])
+    listaAberta.append(noInicial)
 
     while listaAberta:
-        # print(listaFechada)
         # print('\n')
-        # print(listaAberta)
-        # print('\n')
-        posicaonova = testeMenorCusto(listaAberta,estadoFinal,map)
-        listaAberta.remove(posicaonova)
-        listaFechada.append(posicaonova)
-        listaValores.append(index)
-        index+=1
-        for i in range(0,len(listaFechada)):
-            if(listaFechada[i] == posicao):
-                listaValores_pais.append(listaValores[i])
-        filhos = testeFilhos(posicaonova,map,listaFechada)
+        # print(list(map(lambda n: n.posicao,listaAberta)))
+        # print(list(map(lambda n: n.posicao,listaFechada)))
+        noAtual = listaAberta[0]
+
+        for no in listaAberta:
+            if no.f < noAtual.f:
+                noAtual = no
+            
+        listaAberta.remove(noAtual)
+        listaFechada.append(noAtual)
+
+        if noAtual == noFinal:
+            caminho = []
+            no = noAtual
+            while no is not None:
+                caminho.append(no.posicao)
+                no = no.pai
+            return caminho[::-1]
+        
+        filhos = []
+        
+        x = noAtual.posicao[0]
+        y = noAtual.posicao[1]
+
+        if x-1>-1 and mapa[y,x-1] in caminhoPossivel:
+            filhos.append(No(noAtual,(x-1,y)))
+        if x+1<tamanhoMapa and mapa[y,x+1] in caminhoPossivel:
+            filhos.append(No(noAtual,(x+1,y)))
+        if y-1>-1 and mapa[y-1,x] in caminhoPossivel:
+            filhos.append(No(noAtual,(x,y-1)))
+        if y+1<tamanhoMapa and mapa[y+1,x] in caminhoPossivel:
+            filhos.append(No(noAtual,(x,y+1)))
+        
         for filho in filhos:
+
+            if filho in listaFechada:
+                continue
+            
+            filho.g = noAtual.g + filho.custo(mapa)
+            filho.h = calculaHeuristica(filho.posicao, fim)
+            filho.f = filho.g+filho.h
+
+            buscaFilho = list(filter(lambda n: n.posicao == filho.posicao and n.g < filho.g,listaAberta))
+            if len(buscaFilho) > 0: continue
+
+            
+
             listaAberta.append(filho)
 
-    caminhoReverso = len(listaFechada)
-    while caminhoReverso != estadoInicial:
-        arrayCaminho.append(caminhoReverso)
-        for i in range(0,len(listaValores)):
-            if(listaValores[i] == caminhoReverso):
-                pai = listaValores_pais[i]
-                caminhoReverso = listaFechada[pai]
-
-    return arrayCaminho
-
-
-def testeFilhos(posicao,map,listaFechada):
-    possivel = []
-    x = posicao[0]
-    y = posicao[1]
-    cima = map[y][x+1]
-    baixo = map[y][x-1]
-    direita = map[y+1][x]
-    esquerda = map[y-1][x]
-    if(cima in caminhoPossivel and ((x+1,y) not in listaFechada)):
-        possivel.append((x+1,y))
-    if(baixo in caminhoPossivel and ((x-1,y) not in listaFechada)):
-        possivel.append((x-1,y))
-    if(esquerda in caminhoPossivel and ((x,y+1) not in listaFechada)):
-        possivel.append((x,y+1))
-    if(direita in caminhoPossivel and ((x,y-1) not in listaFechada)):
-        possivel.append((x,y-1))
-    return possivel
-
-
-def testeMenorCusto(filhos,estadoFinal,map):
-    custo = custoPiso(filhos[0],map) + calculaHeuristica(filhos[0],estadoFinal)
-    estadoDestino = filhos[0]
-    for i in range(0,len(filhos)):
-        custoDist = custoPiso(filhos[i],map)
-        custoHeurist = calculaHeuristica(filhos[i],estadoFinal)
-        if(custo > (custoDist + custoHeurist)):
-            custo = (custoDist + custoHeurist)
-            estadoDestino = filhos[i]
-    return estadoDestino
-
-def custoPiso(filho,map):
-    letra = map[filho[1]][filho[0]]
-    for i in range(0,len(caminhoPossivel)):
-        if (letra == caminhoPossivel[i]):
-            custo = custoChao[i]
-            return custo
-
-
 def calculaHeuristica(posicaoAtual,estadoFinal):
-    heuristica = math.sqrt( (estadoFinal[0]-posicaoAtual[0])**2 + (estadoFinal[1] - posicaoAtual[1])**2 )
+    heuristica = ((posicaoAtual[0] - estadoFinal[0]) ** 2) + ((posicaoAtual[1] - estadoFinal[1]) ** 2)
     return heuristica
+
+

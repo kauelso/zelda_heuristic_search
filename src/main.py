@@ -27,48 +27,66 @@ def moveLink(target, posicaoLink):
         y = max(y - 1, target[1])
     return (x,y)
 
-def proxCaminhoDungeon(posicaoLink,target):
+def custoCaminho(caminho):
+    return len(caminho)
+
+def proxCaminhoDungeon(mapa,posicaoLink,target,estado):
     dg1 = target[0]
     dg2 = target[1]
     dg3 = target[2]
 
+    caminho1 = []
+    caminho2 = []
+    caminho3 = []
 
-    return []
+    if not estado[0]: caminho1 = buscaCaminho(mapa,posicaoLink,dg1)
+    if not estado[1]: caminho2 = buscaCaminho(mapa,posicaoLink,dg2)
+    if not estado[2]: caminho3 = buscaCaminho(mapa,posicaoLink,dg3)
 
-def caminhoPingente(posicaoLink,target):
-    #return caminho
-    return []
+    custo1 = sys.maxsize
+    custo2 = sys.maxsize
+    custo3 = sys.maxsize
 
-def caminhoSaida(posicaoLink,target):
-    #return caminho
-    return []
+    if caminho1: custo1 = custoCaminho(caminho1)
+    if caminho2: custo2 = custoCaminho(caminho2)
+    if caminho3: custo3 = custoCaminho(caminho3)
 
-def caminhoCasaLink(posicaoLink,target):
-    #return caminho
-    return []
+    menor = min(custo1,custo2,custo3)
 
-def caminhoLostWoods(posicaoLink,target):
-    #return caminho
-    return []
+    if menor == custo1: return custo1
+    elif menor == custo2: return custo2
+    else: return custo3
+
+def caminhoPingente(mapa,posicaoLink,target):
+    return buscaCaminho(mapa,posicaoLink,target)
+
+def caminhoSaida(mapa,posicaoLink,target):
+    return buscaCaminho(mapa,posicaoLink,target)
+
+def caminhoCasaLink(mapa,posicaoLink,target):
+    return buscaCaminho(mapa,posicaoLink,target)
+    
+def caminhoLostWoods(mapa,posicaoLink,target):
+    return buscaCaminho(mapa,posicaoLink,target)
 
 def main():
     fpsClock = pygame.time.Clock()
     velocidade = 5
     total = 0
 
-    posicaoLink = POSICOES_INICIAL_DUNGEON[0]
+    posicaoLink = POSICAO_INICIAL
 
     mapa = getMapaHyrule()
 
     dungeons = getDungeons()
-    dungeonIndex = 0
+    dungeonIndex = -1
     estadoDungeons = (False, False, False) #(dungeon1, dungeon2, dungeon3)
     estadoCasaLink = False
     estadoLostWoods = False
 
     jogoPausado = True
 
-    caminho = buscaCaminho(dungeons[0],posicaoLink,POSICOES_PINGENTE_DUNGEON[0])
+    caminho = []
 
     pygame.init()
 
@@ -91,15 +109,15 @@ def main():
                 if not caminho:
                     if dungeonIndex != -1:
                         if estadoDungeons[dungeonIndex] == False:
-                            caminho = caminhoPingente(posicaoLink,POSICOES_PINGENTE_DUNGEON[dungeonIndex])
+                            caminho = caminhoPingente(dungeons[dungeonIndex],posicaoLink,POSICOES_PINGENTE_DUNGEON[dungeonIndex])
                         else:
-                            caminho = caminhoSaida(posicaoLink, POSICOES_INICIAL_DUNGEON[dungeonIndex])
+                            caminho = caminhoSaida(dungeons[dungeonIndex],posicaoLink, POSICOES_INICIAL_DUNGEON[dungeonIndex])
                     elif False in estadoDungeons:
-                        caminho = proxCaminhoDungeon(posicaoLink, POSICOES_DUNGEONS)
+                        caminho = proxCaminhoDungeon(mapa,posicaoLink, POSICOES_DUNGEONS, estadoDungeons)
                     elif not estadoCasaLink:
-                        caminho = caminhoCasaLink(posicaoLink, POSICAO_INICIAL)
+                        caminho = caminhoCasaLink(mapa,posicaoLink, POSICAO_INICIAL)
                     elif not estadoLostWoods:
-                        caminho = caminhoLostWoods(posicaoLink, POSICAO_LOST_WOODS)
+                        caminho = caminhoLostWoods(mapa,posicaoLink, POSICAO_LOST_WOODS)
                 else:
                     posicaoLink = moveLink(caminho[0],posicaoLink)
                     if caminho[0] == posicaoLink:
@@ -128,7 +146,7 @@ def main():
         pygame.display.update()
         fpsClock.tick(velocidade)
 
-print(buscaCaminho(getDungeons()[0],(14,25),(13,3)))
+print(buscaCaminho(getMapaHyrule(),(24,27),(24,1)))
 
 # if __name__ == '__main__':
 #     import sys
