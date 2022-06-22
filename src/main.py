@@ -128,7 +128,8 @@ def main():
         pygame.display.update()
         fpsClock.tick(velocidade)
 
+print(buscaCaminho(getDungeons()[0],(14,25),(13,3)))
 
-if __name__ == '__main__':
-    import sys
-    sys.exit(main())
+# if __name__ == '__main__':
+#     import sys
+#     sys.exit(main())
