@@ -80,18 +80,14 @@ def buildDungeon(display,data):
 
             pygame.draw.rect(display, (0,0,0), (x,y,155,155), 1) #Borda
 
-def mostraPontuação(display,total):
-    fontObj = pygame.font.Font('freesansbold.ttf', 24)
-    textSurfaceObj = fontObj.render('Total = '+str(total), True, pygame.Color(0,255,0))
-    textRectObj = textSurfaceObj.get_rect()
-    textRectObj.center = (420, 30)
-    display.blit(textSurfaceObj, textRectObj)
 
-def mostraPause(display):
+def mostraTexto(display,texto,top=False):
+    pos = (420, 420)
+    if top: pos = (420, 30)
     fontObj = pygame.font.Font('freesansbold.ttf', 24)
-    textSurfaceObj = fontObj.render('JOGO PAUSADO: PRESSIONE ESPAÇO', True, pygame.Color(0,255,0))
+    textSurfaceObj = fontObj.render(texto, True, pygame.Color(0,255,0))
     textRectObj = textSurfaceObj.get_rect()
-    textRectObj.center = (420, 420)
+    textRectObj.center = pos
     display.blit(textSurfaceObj, textRectObj)
 
 

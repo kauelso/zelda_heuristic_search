@@ -2,6 +2,10 @@
 
 Este trabalho foi testado usando a versão 3.10.2 do python.
 
+## Integrantes
+Kauê Lucas Silvério Oliveira - 11821BCC007
+Guilherme de Castro Berti - 11821BCC023
+
 ## Instalação
 
 Instale o python 3.6+

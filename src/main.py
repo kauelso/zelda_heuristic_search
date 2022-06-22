@@ -111,6 +111,8 @@ def main():
         if not estadoLostWoods:
             if not jogoPausado:
                 if not caminho:
+                    mostraTexto(DISPLAY,"PROCURANDO PROXIMO CAMINHO")
+                    pygame.display.update()
                     if dungeonIndex != -1:
                         if estadoDungeons[dungeonIndex] == False:
                             caminho,custo = caminhoPingente(dungeons[dungeonIndex],posicaoLink,POSICOES_PINGENTE_DUNGEON[dungeonIndex])
@@ -151,9 +153,10 @@ def main():
                         
                     if posicaoLink == POSICAO_LOST_WOODS and estadoCasaLink:
                         estadoLostWoods = True
+                        mostraTexto(DISPLAY, 'JOGO FINALIZADO')
 
-        mostraPontuação(DISPLAY,total)
-        if jogoPausado: mostraPause(DISPLAY)
+        mostraTexto(DISPLAY,'Total = '+str(total),True)
+        if jogoPausado: mostraTexto(DISPLAY,'JOGO PAUSADO: PRESSIONE ESPAÇO')
         pygame.display.update()
         fpsClock.tick(velocidade)
 
