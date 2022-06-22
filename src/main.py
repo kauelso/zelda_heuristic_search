@@ -11,6 +11,7 @@ POSICAO_LOST_WOODS = (6,5)
 POSICOES_DUNGEONS = [(5,32),(39,17),(24,1)]
 POSICOES_INICIAL_DUNGEON = [(14,25),(13,25),(14,25)]
 POSICOES_PINGENTE_DUNGEON = [(13,3),(13,3),(15,18)]
+POSICAO_ESPADA = (1,2)
 
 def moveLink(target, posicaoLink):
     x = posicaoLink[0]
@@ -94,7 +95,7 @@ def main():
 
     pygame.init()
 
-    DISPLAY = pygame.display.set_mode((840,840))
+    DISPLAY = pygame.display.set_mode((420,420))
     pygame.display.set_caption('Legend of Zelda: An AI to the past')
 
     
@@ -142,7 +143,7 @@ def main():
                         dungeonIndex = -1
                 else:
                     buildMapa(DISPLAY,mapa)
-                    mostraAssetsMapa(DISPLAY,posicaoLink,POSICOES_DUNGEONS[0],POSICOES_DUNGEONS[1],POSICOES_DUNGEONS[2],POSICAO_LOST_WOODS, POSICAO_INICIAL)
+                    mostraAssetsMapa(DISPLAY,posicaoLink,POSICOES_DUNGEONS[0],POSICOES_DUNGEONS[1],POSICOES_DUNGEONS[2],POSICAO_LOST_WOODS, POSICAO_INICIAL, POSICAO_ESPADA)
 
                     if posicaoLink in POSICOES_DUNGEONS and not estadoDungeons[POSICOES_DUNGEONS.index(posicaoLink)]:
                         dungeonIndex = POSICOES_DUNGEONS.index(posicaoLink)
