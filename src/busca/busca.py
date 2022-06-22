@@ -23,10 +23,9 @@ class No():
 
 
 
-listaFechada = []
-listaAberta = []
-
 def buscaCaminho(mapa,inicio,fim):
+    listaFechada = []
+    listaAberta = []
     tamanhoMapa = len(mapa)
 
     noInicial = No(posicao=inicio)
@@ -35,9 +34,6 @@ def buscaCaminho(mapa,inicio,fim):
     listaAberta.append(noInicial)
 
     while listaAberta:
-        # print('\n')
-        # print(list(map(lambda n: n.posicao,listaAberta)))
-        # print(list(map(lambda n: n.posicao,listaFechada)))
         noAtual = listaAberta[0]
 
         for no in listaAberta:
@@ -49,39 +45,46 @@ def buscaCaminho(mapa,inicio,fim):
 
         if noAtual == noFinal:
             caminho = []
+            custo = []
             no = noAtual
-            while no is not None:
+            while True:
+                if no is None:
+                    break
                 caminho.append(no.posicao)
+                custo.append(no.custo(mapa))
                 no = no.pai
-            return caminho[::-1]
+            caminho.pop(len(caminho)-1)
+            custo.pop(len(custo)-1)
+            return caminho[::-1],custo[::-1]
         
         filhos = []
         
         x = noAtual.posicao[0]
         y = noAtual.posicao[1]
 
-        if x-1>-1 and mapa[y,x-1] in caminhoPossivel:
-            filhos.append(No(noAtual,(x-1,y)))
-        if x+1<tamanhoMapa and mapa[y,x+1] in caminhoPossivel:
-            filhos.append(No(noAtual,(x+1,y)))
-        if y-1>-1 and mapa[y-1,x] in caminhoPossivel:
-            filhos.append(No(noAtual,(x,y-1)))
-        if y+1<tamanhoMapa and mapa[y+1,x] in caminhoPossivel:
-            filhos.append(No(noAtual,(x,y+1)))
+        if x-1>-1:
+            if mapa[y,x-1] in caminhoPossivel:
+                filhos.append(No(noAtual,(x-1,y)))
+        if x+1<tamanhoMapa:
+            if mapa[y,x+1] in caminhoPossivel:
+                filhos.append(No(noAtual,(x+1,y)))
+        if y-1>-1:
+            if mapa[y-1,x] in caminhoPossivel:
+                filhos.append(No(noAtual,(x,y-1)))
+        if y+1<tamanhoMapa:
+            if mapa[y+1,x] in caminhoPossivel:
+                filhos.append(No(noAtual,(x,y+1)))
         
         for filho in filhos:
 
-            if filho in listaFechada:
-                continue
-            
-            filho.g = noAtual.g + filho.custo(mapa)
             filho.h = calculaHeuristica(filho.posicao, fim)
+            filho.g = noAtual.g + filho.custo(mapa)
             filho.f = filho.g+filho.h
 
+            if filho in listaFechada: continue
+            
             buscaFilho = list(filter(lambda n: n.posicao == filho.posicao and n.g < filho.g,listaAberta))
             if len(buscaFilho) > 0: continue
-
-            
 
             listaAberta.append(filho)
 

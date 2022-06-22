@@ -17,6 +17,7 @@ COR_PAREDE_DUNGEON = pygame.Color(97, 97, 97)
 #Assets
 LINK = pygame.image.load(assetsDir + 'link.png')
 PORTA = pygame.image.load(assetsDir + 'door.png')
+CASA = pygame.image.load(assetsDir + 'door_house.png')
 
 
 pingenteAzul = pygame.image.load(assetsDir + 'pingente_azul.webp')
@@ -53,10 +54,11 @@ def buildMapa(display,data):
                 pygame.draw.rect(display,COR_MONTANHA,(x, y, offset, offset))
             elif data[dataY][dataX] == 'R':
                 pygame.draw.rect(display,COR_AGUA,(x, y, offset, offset))
-            elif data[dataY][dataX] == 'P':
-                pygame.draw.rect(display,COR_CHAO_DUNGEON,(x, y, offset, offset))
-            else:
+            elif data[dataY][dataX] == 'W':
                 pygame.draw.rect(display,COR_PAREDE_DUNGEON,(x, y, offset, offset))
+            else:
+                pygame.draw.rect(display,COR_CHAO_DUNGEON,(x, y, offset, offset))
+
             
             #pygame.draw.circle(display,pygame.Color(255,0,0),(x+(offset/2),y+(offset/2)),3,0)
 
@@ -71,7 +73,7 @@ def buildDungeon(display,data):
             dataX = floor(x/offset)
             dataY = floor(y/offset)
 
-            if data[dataY][dataX] == 'F':
+            if data[dataY][dataX] == 'P':
                 pygame.draw.rect(display,COR_CHAO_DUNGEON,(x, y, offset, offset))
             else:
                 pygame.draw.rect(display,COR_PAREDE_DUNGEON,(x, y, offset, offset))
@@ -93,26 +95,29 @@ def mostraPause(display):
     display.blit(textSurfaceObj, textRectObj)
 
 
-def mostraAssetsMapa(display,posicaoLink, posicaoDungeon1, posicaoDungeon2, posicaoDungeon3, posicaoLostWoods):
+def mostraAssetsMapa(display,posicaoLink, posicaoDungeon1, posicaoDungeon2, posicaoDungeon3, posicaoLostWoods, casa):
     link = pygame.transform.scale(LINK, (20, 20))
     porta = pygame.transform.scale(PORTA, (20, 20))
+    portaCasa = pygame.transform.scale(CASA, (20,20))
 
-    display.blit(link,posicaoRelativaMapa(posicaoLink))
+    display.blit(portaCasa,posicaoRelativaMapa(casa))
     display.blit(porta,posicaoRelativaMapa(posicaoDungeon1))
     display.blit(porta,posicaoRelativaMapa(posicaoDungeon2))
     display.blit(porta,posicaoRelativaMapa(posicaoDungeon3))
     display.blit(porta,posicaoRelativaMapa(posicaoLostWoods))
+    display.blit(link,posicaoRelativaMapa(posicaoLink))
 
-def mostraAssetsDungeon(display,posicaoLink, posicaoPingente, dungeonIndex, posicaoPorta):
+def mostraAssetsDungeon(display,posicaoLink, posicaoPingente, dungeonIndex, posicaoPorta, estado):
     link = pygame.transform.scale(LINK, (30, 30))
     porta = pygame.transform.scale(PORTA, (30, 30))
 
     display.blit(porta,posicaoRelativaDungeon(posicaoPorta))
     display.blit(link,posicaoRelativaDungeon(posicaoLink))
-    if(dungeonIndex == 0):
-        display.blit(pingenteAzul,posicaoRelativaDungeon(posicaoPingente))
-    elif dungeonIndex == 1:
-        display.blit(pingenteVermelho,posicaoRelativaDungeon(posicaoPingente))
-    else:
-        display.blit(pingenteVerde,posicaoRelativaDungeon(posicaoPingente))
+    if not estado[dungeonIndex]:
+        if(dungeonIndex == 0):
+            display.blit(pingenteAzul,posicaoRelativaDungeon(posicaoPingente))
+        elif dungeonIndex == 1:
+            display.blit(pingenteVermelho,posicaoRelativaDungeon(posicaoPingente))
+        else:
+            display.blit(pingenteVerde,posicaoRelativaDungeon(posicaoPingente))
 

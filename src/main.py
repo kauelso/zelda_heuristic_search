@@ -28,7 +28,10 @@ def moveLink(target, posicaoLink):
     return (x,y)
 
 def custoCaminho(caminho):
-    return len(caminho)
+    soma = 0
+    for i in caminho[1]:
+        soma += i
+    return soma
 
 def proxCaminhoDungeon(mapa,posicaoLink,target,estado):
     dg1 = target[0]
@@ -53,9 +56,9 @@ def proxCaminhoDungeon(mapa,posicaoLink,target,estado):
 
     menor = min(custo1,custo2,custo3)
 
-    if menor == custo1: return custo1
-    elif menor == custo2: return custo2
-    else: return custo3
+    if menor == custo1: return caminho1
+    elif menor == custo2: return caminho2
+    else: return caminho3
 
 def caminhoPingente(mapa,posicaoLink,target):
     return buscaCaminho(mapa,posicaoLink,target)
@@ -71,7 +74,7 @@ def caminhoLostWoods(mapa,posicaoLink,target):
 
 def main():
     fpsClock = pygame.time.Clock()
-    velocidade = 5
+    velocidade = 20
     total = 0
 
     posicaoLink = POSICAO_INICIAL
@@ -80,13 +83,14 @@ def main():
 
     dungeons = getDungeons()
     dungeonIndex = -1
-    estadoDungeons = (False, False, False) #(dungeon1, dungeon2, dungeon3)
+    estadoDungeons = [False, False, False] #(dungeon1, dungeon2, dungeon3)
     estadoCasaLink = False
     estadoLostWoods = False
 
     jogoPausado = True
 
     caminho = []
+    custo = []
 
     pygame.init()
 
@@ -104,29 +108,30 @@ def main():
                 if event.key == K_SPACE : 
                     jogoPausado = not jogoPausado
 
-        if(not estadoLostWoods):
+        if not estadoLostWoods:
             if not jogoPausado:
                 if not caminho:
                     if dungeonIndex != -1:
                         if estadoDungeons[dungeonIndex] == False:
-                            caminho = caminhoPingente(dungeons[dungeonIndex],posicaoLink,POSICOES_PINGENTE_DUNGEON[dungeonIndex])
+                            caminho,custo = caminhoPingente(dungeons[dungeonIndex],posicaoLink,POSICOES_PINGENTE_DUNGEON[dungeonIndex])
                         else:
-                            caminho = caminhoSaida(dungeons[dungeonIndex],posicaoLink, POSICOES_INICIAL_DUNGEON[dungeonIndex])
+                            caminho,custo = caminhoSaida(dungeons[dungeonIndex],posicaoLink, POSICOES_INICIAL_DUNGEON[dungeonIndex])
                     elif False in estadoDungeons:
-                        caminho = proxCaminhoDungeon(mapa,posicaoLink, POSICOES_DUNGEONS, estadoDungeons)
+                        caminho,custo = proxCaminhoDungeon(mapa,posicaoLink, POSICOES_DUNGEONS, estadoDungeons)
                     elif not estadoCasaLink:
-                        caminho = caminhoCasaLink(mapa,posicaoLink, POSICAO_INICIAL)
+                        caminho,custo = caminhoCasaLink(mapa,posicaoLink, POSICAO_INICIAL)
                     elif not estadoLostWoods:
-                        caminho = caminhoLostWoods(mapa,posicaoLink, POSICAO_LOST_WOODS)
+                        caminho,custo = caminhoLostWoods(mapa,posicaoLink, POSICAO_LOST_WOODS)
                 else:
                     posicaoLink = moveLink(caminho[0],posicaoLink)
                     if caminho[0] == posicaoLink:
+                        total += custo[0]
                         caminho.remove(caminho[0])
+                        custo.remove(custo[0])
 
                 if(dungeonIndex > -1):
                     buildDungeon(DISPLAY, dungeons[dungeonIndex])
-                    mostraAssetsDungeon(DISPLAY,posicaoLink,POSICOES_PINGENTE_DUNGEON[dungeonIndex],dungeonIndex,POSICOES_INICIAL_DUNGEON[dungeonIndex])
-                    print(posicaoLink)
+                    mostraAssetsDungeon(DISPLAY,posicaoLink,POSICOES_PINGENTE_DUNGEON[dungeonIndex],dungeonIndex,POSICOES_INICIAL_DUNGEON[dungeonIndex],estadoDungeons)
                     
                     if posicaoLink == POSICOES_PINGENTE_DUNGEON[dungeonIndex] and not estadoDungeons[dungeonIndex]:
                         estadoDungeons[dungeonIndex] = True
@@ -135,19 +140,23 @@ def main():
                         dungeonIndex = -1
                 else:
                     buildMapa(DISPLAY,mapa)
-                    mostraAssetsMapa(DISPLAY,posicaoLink,POSICOES_DUNGEONS[0],POSICOES_DUNGEONS[1],POSICOES_DUNGEONS[2],POSICAO_LOST_WOODS)
+                    mostraAssetsMapa(DISPLAY,posicaoLink,POSICOES_DUNGEONS[0],POSICOES_DUNGEONS[1],POSICOES_DUNGEONS[2],POSICAO_LOST_WOODS, POSICAO_INICIAL)
 
-                    if posicaoLink in POSICOES_DUNGEONS:
+                    if posicaoLink in POSICOES_DUNGEONS and not estadoDungeons[POSICOES_DUNGEONS.index(posicaoLink)]:
                         dungeonIndex = POSICOES_DUNGEONS.index(posicaoLink)
                         posicaoLink = POSICOES_INICIAL_DUNGEON[dungeonIndex]
+
+                    if posicaoLink == POSICAO_INICIAL and not False in estadoDungeons:
+                        estadoCasaLink = True
+                        
+                    if posicaoLink == POSICAO_LOST_WOODS and estadoCasaLink:
+                        estadoLostWoods = True
 
         mostraPontuação(DISPLAY,total)
         if jogoPausado: mostraPause(DISPLAY)
         pygame.display.update()
         fpsClock.tick(velocidade)
 
-print(buscaCaminho(getMapaHyrule(),(24,27),(24,1)))
-
-# if __name__ == '__main__':
-#     import sys
-#     sys.exit(main())
+if __name__ == '__main__':
+    import sys
+    sys.exit(main())
