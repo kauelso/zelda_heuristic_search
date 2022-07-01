@@ -76,17 +76,13 @@ def buscaCaminho(mapa,inicio,fim):
                 filhos.append(No(noAtual,(x,y+1)))
         
         for filho in filhos:
-
-            filho.h = calculaHeuristica(filho.posicao, fim)
-            filho.g = noAtual.g + filho.custo(mapa)
-            filho.f = filho.g+filho.h
-
-            if filho in listaFechada: continue
-            
-            buscaFilho = list(filter(lambda n: n.posicao == filho.posicao and n.g < filho.g,listaAberta))
-            if len(buscaFilho) > 0: continue
-
-            listaAberta.append(filho)
+            if filho not in listaFechada:
+                filho.h = calculaHeuristica(filho.posicao, fim)
+                filho.g = noAtual.g + filho.custo(mapa)
+                filho.f = filho.g+filho.h
+                
+                buscaFilho = list(filter(lambda n: n.posicao == filho.posicao and n.g < filho.g,listaAberta))
+                if len(buscaFilho) == 0: listaAberta.append(filho)
 
 def calculaHeuristica(posicaoAtual,estadoFinal):
     heuristica = ((posicaoAtual[0] - estadoFinal[0]) ** 2) + ((posicaoAtual[1] - estadoFinal[1]) ** 2)

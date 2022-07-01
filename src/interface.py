@@ -22,25 +22,25 @@ ESPADA = pygame.image.load(assetsDir + 'sword.png')
 
 
 pingenteAzul = pygame.image.load(assetsDir + 'pingente_azul.webp')
-pingenteAzul = pygame.transform.scale(pingenteAzul, (15, 15))
+pingenteAzul = pygame.transform.scale(pingenteAzul, (30, 30))
 
 pingenteVermelho = pygame.image.load(assetsDir + 'pingente_vermelho.webp')
-pingenteVermelho = pygame.transform.scale(pingenteVermelho, (15, 15))
+pingenteVermelho = pygame.transform.scale(pingenteVermelho, (30, 30))
 
 pingenteVerde = pygame.image.load( assetsDir + 'pingente_verde.webp')
-pingenteVerde = pygame.transform.scale(pingenteVerde, (15, 15))
+pingenteVerde = pygame.transform.scale(pingenteVerde, (30, 30))
 
 def posicaoRelativaMapa(posicao):
-    return ((posicao[0]*10),(posicao[1]*10))
+    return ((posicao[0]*20),(posicao[1]*20))
 
 def posicaoRelativaDungeon(posicao):
-    return ((posicao[0]*15),(posicao[1]*15))
+    return ((posicao[0]*30),(posicao[1]*30))
 
 #Construir mapa de hyrule
 def buildMapa(display,data):
-    offset = 10
-    for y in range(0,420,offset):
-        for x in range(0,420,offset):
+    offset = 20
+    for y in range(0,840,offset):
+        for x in range(0,840,offset):
             
             dataX = floor(x/offset)
             dataY = floor(y/offset)
@@ -67,9 +67,9 @@ def buildMapa(display,data):
 
 #Construir uma dungeon
 def buildDungeon(display,data):
-    offset = 15
-    for y in range(0,420,offset):
-        for x in range(0,420,offset):
+    offset = 30
+    for y in range(0,840,offset):
+        for x in range(0,840,offset):
             
             dataX = floor(x/offset)
             dataY = floor(y/offset)
@@ -83,9 +83,9 @@ def buildDungeon(display,data):
 
 
 def mostraTexto(display,texto,top=False):
-    pos = (210, 210)
-    if top: pos = (210, 15)
-    fontObj = pygame.font.Font('freesansbold.ttf', 12)
+    pos = (420, 420)
+    if top: pos = (420, 30)
+    fontObj = pygame.font.Font('freesansbold.ttf', 18)
     textSurfaceObj = fontObj.render(texto, True, pygame.Color(0,255,0))
     textRectObj = textSurfaceObj.get_rect()
     textRectObj.center = pos
@@ -93,10 +93,10 @@ def mostraTexto(display,texto,top=False):
 
 
 def mostraAssetsMapa(display,posicaoLink, posicaoDungeon1, posicaoDungeon2, posicaoDungeon3, posicaoLostWoods, casa, espadaP):
-    link = pygame.transform.scale(LINK, (10, 10))
-    porta = pygame.transform.scale(PORTA, (10, 10))
-    portaCasa = pygame.transform.scale(CASA, (10,10))
-    espada = pygame.transform.scale(ESPADA,(10,10))
+    link = pygame.transform.scale(LINK, (20, 20))
+    porta = pygame.transform.scale(PORTA, (20, 20))
+    portaCasa = pygame.transform.scale(CASA, (20,20))
+    espada = pygame.transform.scale(ESPADA,(20,20))
 
     display.blit(espada,posicaoRelativaMapa(espadaP))
     display.blit(portaCasa,posicaoRelativaMapa(casa))
@@ -107,8 +107,8 @@ def mostraAssetsMapa(display,posicaoLink, posicaoDungeon1, posicaoDungeon2, posi
     display.blit(link,posicaoRelativaMapa(posicaoLink))
 
 def mostraAssetsDungeon(display,posicaoLink, posicaoPingente, dungeonIndex, posicaoPorta, estado):
-    link = pygame.transform.scale(LINK, (15, 15))
-    porta = pygame.transform.scale(PORTA, (15, 15))
+    link = pygame.transform.scale(LINK, (30, 30))
+    porta = pygame.transform.scale(PORTA, (30, 30))
 
     display.blit(porta,posicaoRelativaDungeon(posicaoPorta))
     display.blit(link,posicaoRelativaDungeon(posicaoLink))

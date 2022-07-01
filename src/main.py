@@ -1,7 +1,7 @@
 import numpy as np
 import pygame, sys
 
-from busca.busca import buscaCaminho
+from busca.busca import buscaCaminho, calculaHeuristica
 from pygame.locals import *
 from interface import *
 from arquivos import *
@@ -28,38 +28,24 @@ def moveLink(target, posicaoLink):
         y = max(y - 1, target[1])
     return (x,y)
 
-def custoCaminho(caminho):
-    soma = 0
-    for i in caminho[1]:
-        soma += i
-    return soma
-
 def proxCaminhoDungeon(mapa,posicaoLink,target,estado):
     dg1 = target[0]
     dg2 = target[1]
     dg3 = target[2]
-
-    caminho1 = []
-    caminho2 = []
-    caminho3 = []
-
-    if not estado[0]: caminho1 = buscaCaminho(mapa,posicaoLink,dg1)
-    if not estado[1]: caminho2 = buscaCaminho(mapa,posicaoLink,dg2)
-    if not estado[2]: caminho3 = buscaCaminho(mapa,posicaoLink,dg3)
-
+    
     custo1 = sys.maxsize
     custo2 = sys.maxsize
     custo3 = sys.maxsize
 
-    if caminho1: custo1 = custoCaminho(caminho1)
-    if caminho2: custo2 = custoCaminho(caminho2)
-    if caminho3: custo3 = custoCaminho(caminho3)
+    if not estado[0]: custo1 = calculaHeuristica(posicaoLink,dg1)
+    if not estado[1]: custo2 = calculaHeuristica(posicaoLink,dg2)
+    if not estado[2]: custo3 = calculaHeuristica(posicaoLink,dg3)
 
     menor = min(custo1,custo2,custo3)
 
-    if menor == custo1: return caminho1
-    elif menor == custo2: return caminho2
-    else: return caminho3
+    if menor == custo1: return buscaCaminho(mapa,posicaoLink,dg1)
+    elif menor == custo2: return buscaCaminho(mapa,posicaoLink,dg2)
+    else: return buscaCaminho(mapa,posicaoLink,dg3)
 
 def caminhoPingente(mapa,posicaoLink,target):
     return buscaCaminho(mapa,posicaoLink,target)
@@ -75,7 +61,7 @@ def caminhoLostWoods(mapa,posicaoLink,target):
 
 def main():
     fpsClock = pygame.time.Clock()
-    velocidade = 20
+    velocidade = 10
     total = 0
 
     posicaoLink = POSICAO_INICIAL
@@ -95,7 +81,7 @@ def main():
 
     pygame.init()
 
-    DISPLAY = pygame.display.set_mode((420,420))
+    DISPLAY = pygame.display.set_mode((840,840))
     pygame.display.set_caption('Legend of Zelda: An AI to the past')
 
     
